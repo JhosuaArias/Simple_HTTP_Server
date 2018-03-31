@@ -1,0 +1,105 @@
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+import java.util.TimeZone;
+
+public class HttpResponse {
+
+    private HttpRequest request;
+    private String response;
+    private String serverPath;
+
+    public HttpResponse(HttpRequest request){
+
+        this.request = request;
+        this.GenerateResponse();
+    }
+
+    public String getResponse(){
+        return this.response;
+    }
+
+    private void GenerateResponse () {
+        switch (this.request.method){
+            case GET:
+                this.HandleMethod(true);
+                break;
+            case POST:
+                this.HandleMethod(true);
+                break;
+            case UNKWOWN:
+                this.HandleUnknown();
+                break;
+            case HEAD:
+                this.HandleMethod(false);
+                break;
+        }
+    }
+
+    private void HandleUnknown(){
+        this.response = "HTTP/1.0 501 \r\n"; //HTTP Version and Status
+        this.response += "Date: " + this.getServerTime() + "\r\n";
+        this.response += "Server: TP1 \r\n"; //Server ID
+        this.response += "Connection: close \r\n";
+        this.response += "\r\n";
+    }
+
+    private void HandleMethod(boolean body){
+        File file = new File(this.serverPath + this.request.filename);
+
+        this.response = "HTTP/1.0 status \r\n"; //HTTP Version and Status
+        this.response += "Date: " + this.getServerTime() + "\r\n";
+        this.response += "Server: TP1 \r\n"; //Server ID
+        this.response += "Content-type: " + this.getContentType(this.request.filename) + " \r\n"; //Content type
+        this.response += "Content-length: " + String.valueOf(file.length()) + " \r\n"; //Length of the content
+        this.response += "Connection: close \r\n";
+        this.response += "\r\n";
+
+        try{
+            FileInputStream fileInputStream = new FileInputStream(file);
+
+            if (body) {
+                int endOfFile = fileInputStream.read();
+                while (endOfFile != -1){
+                    response += (char) endOfFile;
+                    endOfFile = fileInputStream.read();
+                }
+            }
+
+            this.response = this.response.replace("status", "200");
+
+        } catch (FileNotFoundException e) {
+
+            this.response = this.response.replace("status", "404");
+
+        } catch (Exception e) {
+
+            this.response = this.response.replace("status", "500");
+
+        }
+    }
+
+    private String getContentType(String fileName) {
+        if (fileName.endsWith(".htm") || fileName.endsWith(".html")
+                || fileName.endsWith(".txt")) {
+            return "text/html";
+        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
+            return "image/jpeg";
+        } else if (fileName.endsWith(".gif")) {
+            return "image/gif";
+        } else {
+            return "application/octet-stream";
+        }
+    }
+
+    private String getServerTime() {
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
+        return dateFormat.format(calendar.getTime());
+    }
+}
