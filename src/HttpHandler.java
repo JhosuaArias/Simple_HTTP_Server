@@ -2,8 +2,6 @@ import java.io.FileReader;
 
 public class HttpHandler {
 
-    private FileReader fileReader;
-
     public HttpHandler(){
 
     }
