@@ -5,7 +5,11 @@ import java.net.Socket;
 
 public class Server {
 
-    HttpHandler httpHandler;
+    private HttpHandler httpHandler;
+
+    public Server() {
+        this.httpHandler = new HttpHandler();
+    }
 
     public void start () throws Exception {
         final ServerSocket server = new ServerSocket(8080);
@@ -15,11 +19,15 @@ public class Server {
             InputStreamReader isr = new InputStreamReader(client.getInputStream());
             BufferedReader reader = new BufferedReader(isr);
             String line = reader.readLine();
-            while (!line.isEmpty()) {
-                System.out.println(line);
+            StringBuilder stringBuilder = new StringBuilder();
+            while ( line != null && !line.isEmpty()) {
+                stringBuilder.append(line + "\n");
+                //System.out.println(line);
                 line = reader.readLine();
             }
-            client.close();
+            System.out.println(stringBuilder.toString());
+            httpHandler.handleHttp(stringBuilder.toString());
+            //client.close();
 
         }
     }

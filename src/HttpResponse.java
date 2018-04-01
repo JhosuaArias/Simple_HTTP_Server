@@ -11,9 +11,11 @@ public class HttpResponse {
     private HttpRequest request;
     private String response;
     private String serverPath;
+    private MimeTypes contentTypes;
 
     public HttpResponse(HttpRequest request){
 
+        this.contentTypes = new MimeTypes();
         this.request = request;
         this.GenerateResponse();
     }
@@ -83,16 +85,8 @@ public class HttpResponse {
     }
 
     private String getContentType(String fileName) {
-        if (fileName.endsWith(".htm") || fileName.endsWith(".html")
-                || fileName.endsWith(".txt")) {
-            return "text/html";
-        } else if (fileName.endsWith(".jpg") || fileName.endsWith(".jpeg")) {
-            return "image/jpeg";
-        } else if (fileName.endsWith(".gif")) {
-            return "image/gif";
-        } else {
-            return "application/octet-stream";
-        }
+        String [] format = fileName.split("\\.");
+        return this.contentTypes.getMimeType(format[1]);
     }
 
     private String getServerTime() {
