@@ -37,7 +37,7 @@ public class HttpHandler {
             filename = splitUrl[0];
 
             if(filename.equalsIgnoreCase("/")){
-                filename = "/index.html";
+                filename = "index.html";
             }
 
             if (splitUrl.length == 2) {
@@ -48,7 +48,6 @@ public class HttpHandler {
                     hashParameters.put(parameter[0],parameter[1]);
                 }
             }
-            System.out.println("filename: " + filename + "\nparameters: " + hashParameters.toString());
             if (method.equalsIgnoreCase("GET")) {
                 httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.GET, hashParameters);
             } else {

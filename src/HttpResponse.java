@@ -10,7 +10,6 @@ public class HttpResponse {
 
     private HttpRequest request;
     private String response;
-    private String serverPath;
     private MimeTypes contentTypes;
 
     public HttpResponse(HttpRequest request){
@@ -18,7 +17,6 @@ public class HttpResponse {
         this.contentTypes = new MimeTypes();
         this.request = request;
         this.GenerateResponse();
-        this.serverPath = "pages";
     }
 
     public String getResponse(){
@@ -43,22 +41,22 @@ public class HttpResponse {
     }
 
     private void HandleUnknown(){
-        this.response = "HTTP/1.0 501 \r\n"; //HTTP Version and Status
+        this.response = "HTTP/1.1 501 \r\n"; //HTTP Version and Status
         this.response += "Date: " + this.getServerTime() + "\r\n";
-        this.response += "Server: TP1 \r\n"; //Server ID
-        this.response += "Connection: close \r\n";
+        this.response += "Server: TP1/1.0 \r\n"; //Server ID
+        //this.response += "Connection: close \r\n";
         this.response += "\r\n";
     }
 
     private void HandleMethod(boolean body){
-        File file = new File(this.serverPath + this.request.filename);
+        File file = new File(this.request.filename);
 
-        this.response = "HTTP/1.0 status \r\n"; //HTTP Version and Status
+        this.response = "HTTP/1.1 status \r\n"; //HTTP Version and Status
         this.response += "Date: " + this.getServerTime() + "\r\n";
-        this.response += "Server: TP1 \r\n"; //Server ID
-        this.response += "Content-type: " + this.getContentType(this.request.filename) + " \r\n"; //Content type
-        this.response += "Content-length: " + String.valueOf(file.length()) + " \r\n"; //Length of the content
-        this.response += "Connection: close \r\n";
+        this.response += "Server: TP1/1.0 \r\n"; //Server ID
+        this.response += "Content-Length: " + String.valueOf(file.length()) + " \r\n"; //Length of the content
+        this.response += "Content-Type: " + this.getContentType(this.request.filename) + " \r\n"; //Content type
+        //this.response += "Connection: close \r\n";
         this.response += "\r\n";
 
         try{
@@ -72,7 +70,7 @@ public class HttpResponse {
                 }
             }
 
-            this.response = this.response.replace("status", "200");
+            this.response = this.response.replace("status", "200 OK");
 
         } catch (FileNotFoundException e) {
 
