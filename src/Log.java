@@ -7,21 +7,15 @@ import java.util.Map;
 public class Log {
 
     public void WriteLog(HttpRequest request) throws IOException {
-        String logFileName = "bitacora.txt";
+        String logFileName = "bitacora.csv";
         FileWriter fw = new FileWriter(logFileName, true);
         BufferedWriter bw = new BufferedWriter(fw);
-        bw.write("Metodo: " + request.method.getName());
-        bw.newLine();
-        bw.write("Estampilla de tiempo: " + this.getTimestamp());
-        bw.newLine();
-        bw.write("Servidor: " + request.host);
-        bw.newLine();
-        bw.write("Refiere: " + request.referer);
-        bw.newLine();
-        bw.write("URL: " + request.filename);
-        bw.newLine();
-        bw.write("Datos: " + this.getParametersAsString(request.parameters));
-        bw.newLine();
+        bw.write(request.method.getName() + ",");
+        bw.write(this.getTimestamp() + ",");
+        bw.write(request.host + ",");
+        bw.write(request.referer + ",");
+        bw.write(request.filename + ",");
+        bw.write(this.getParametersAsString(request.parameters) + ",");
         bw.newLine();
         bw.close();
     }
