@@ -38,6 +38,8 @@ public class HttpHandler {
 
             if(filename.equalsIgnoreCase("/")){
                 filename = "index.html";
+            }else {
+                filename = filename.substring(1,filename.length());
             }
 
             if (splitUrl.length == 2) {
@@ -59,6 +61,8 @@ public class HttpHandler {
             if (method.equalsIgnoreCase("POST")) {
                 if(filename.equalsIgnoreCase("/")){
                     filename = "index.html";
+                }else {
+                    filename = filename.substring(1,filename.length());
                 }
                 parameters = splitMessage[splitMessage.length-1].split("&");
                 for (int i = 0; i < parameters.length; i++) {

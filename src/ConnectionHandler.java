@@ -28,6 +28,7 @@ public class ConnectionHandler extends Thread {
 
             this.httpHandler.handleHttp(requestString);
             String response = httpHandler.createResponse();
+            System.out.println(response);
             this.printWriter.write(response.toCharArray());
 
             this.printWriter.close();
