@@ -18,6 +18,7 @@ public class HttpResponse {
         this.contentTypes = new MimeTypes();
         this.request = request;
         this.GenerateResponse();
+        this.serverPath = "pages";
     }
 
     public String getResponse(){

@@ -6,10 +6,9 @@ import java.util.Map;
 
 public class Log {
 
-    private String logFileName;
-
     public void WriteLog(HttpRequest request) throws IOException {
-        FileWriter fw = new FileWriter(this.logFileName, true);
+        String logFileName = "bitacora.txt";
+        FileWriter fw = new FileWriter(logFileName, true);
         BufferedWriter bw = new BufferedWriter(fw);
         bw.write("Metodo: " + request.method.getName());
         bw.newLine();
