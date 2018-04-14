@@ -28,11 +28,10 @@ public class ConnectionHandler extends Thread {
 
             this.httpHandler.handleHttp(requestString);
             String response = httpHandler.createResponse();
-            System.out.println(response);
             this.printWriter.write(response.toCharArray());
 
-            this.bufferedReader.close();
             this.printWriter.close();
+            this.bufferedReader.close();
             this.client.close();
         } catch (IOException e){
             e.printStackTrace();
