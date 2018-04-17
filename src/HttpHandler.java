@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.util.HashMap;
 
 public class HttpHandler {
@@ -77,7 +76,7 @@ public class HttpHandler {
 
     }
 
-    public String createResponse() {
+    public byte[] createResponse() {
         HttpResponse httpResponse = new HttpResponse(this.httpRequest);
         return httpResponse.getResponse();
     }

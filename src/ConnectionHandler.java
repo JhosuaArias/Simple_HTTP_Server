@@ -1,20 +1,17 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class ConnectionHandler extends Thread {
 
     private Socket client;
-    private PrintWriter printWriter;
+    private OutputStream printWriter;
     private BufferedReader bufferedReader;
     private HttpHandler httpHandler;
 
     public ConnectionHandler(Socket socket, MimeTypes mimeTypes) throws Exception{
         this.client = socket;
         this.bufferedReader = new BufferedReader(new InputStreamReader(this.client.getInputStream()));
-        this.printWriter = new PrintWriter(this.client.getOutputStream());
+        this.printWriter = this.client.getOutputStream();
         this.httpHandler = new HttpHandler(mimeTypes);
     }
 
@@ -25,11 +22,11 @@ public class ConnectionHandler extends Thread {
             while(this.bufferedReader.ready() || requestString.length() == 0){
                 requestString += (char) this.bufferedReader.read();
             }
-
+            System.out.println(requestString);
             this.httpHandler.handleHttp(requestString);
-            String response = httpHandler.createResponse();
+            byte[] response = httpHandler.createResponse();
             System.out.println(response);
-            this.printWriter.write(response.toCharArray());
+            this.printWriter.write(response);
 
             this.printWriter.close();
             this.bufferedReader.close();
