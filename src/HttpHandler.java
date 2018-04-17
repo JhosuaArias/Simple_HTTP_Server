@@ -16,7 +16,7 @@ public class HttpHandler {
         String splitFirstLine[] = splitMessage[0].split("\\s+");
         String method = splitFirstLine[0];
         String parameters[];
-        String filename;
+        String filename = "";
 
         for (int i = 1; i < splitMessage.length; i++) {
             String splitHeader[] = splitMessage[i].split(":");
@@ -56,8 +56,8 @@ public class HttpHandler {
             }
         } else {
 
-            filename = splitMessage[1];
             if (method.equalsIgnoreCase("POST")) {
+                filename = splitMessage[1];
                 if(filename.equalsIgnoreCase("/")){
                     filename = "index.html";
                 }else {
