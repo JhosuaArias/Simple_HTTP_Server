@@ -4,12 +4,10 @@ import java.util.concurrent.ExecutionException;
 public class Controller {
 
     Server server;
-    Terminal terminal;
 
     public Controller(){
 
         this.server = new Server();
-        this.terminal = new Terminal();
 
     }
 
