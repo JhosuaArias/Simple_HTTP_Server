@@ -1,1 +1,8 @@
 Método,Estampilla de Tiempo,Servidor,Refiere,URL,Parámetros,
+GET,1524085482874,localhost,,index.html,,
+GET,1524085510909,localhost,,index.html,,
+GET,1524085522776,localhost,,index.html,,
+HEAD,1524085534191,localhost,,index.html,,
+POST,1524085555406,localhost,,index.html,mensaje=Hola+Mundo&,
+GET,1524085591331,localhost,,index.html,val1=20&,
+UNKNOWN,1524085607447,localhost,,,,
