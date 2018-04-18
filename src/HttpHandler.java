@@ -57,7 +57,8 @@ public class HttpHandler {
         } else {
 
             if (method.equalsIgnoreCase("POST")) {
-                filename = splitMessage[1];
+                String splitUrl[] = splitFirstLine[1].split("\\?");
+                filename = splitUrl[0];
                 if(filename.equalsIgnoreCase("/")){
                     filename = "index.html";
                 }else {
@@ -68,7 +69,7 @@ public class HttpHandler {
                     String parameter[] = parameters[i].split("=");
                     hashParameters.put(parameter[0],parameter[1]);
                 }
-                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters);
+                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.POST, hashParameters);
             } else {
                 httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters);
             }
