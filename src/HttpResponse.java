@@ -64,24 +64,29 @@ public class HttpResponse {
         this.strResponse += "Connection: close \r\n";
         this.strResponse += "\r\n";
 
-        try{
-            FileInputStream fileInputStream = new FileInputStream(file);
-            if (body) {
-                Path path = Paths.get(this.request.filename);
-                bodyData = Files.readAllBytes(path);
+        if(this.request.contentTypes.contains(this.getContentType(this.request.filename)) || this.request.contentTypes.contains("*/*")){
+            try{
+                FileInputStream fileInputStream = new FileInputStream(file);
+                if (body) {
+                    Path path = Paths.get(this.request.filename);
+                    bodyData = Files.readAllBytes(path);
+                }
+
+                this.strResponse = this.strResponse.replace("status", "200 OK");
+
+            } catch (FileNotFoundException e) {
+
+                this.strResponse = this.strResponse.replace("status", "404");
+
+            } catch (Exception e) {
+
+                this.strResponse = this.strResponse.replace("status", "500");
+
             }
-
-            this.strResponse = this.strResponse.replace("status", "200 OK");
-
-        } catch (FileNotFoundException e) {
-
-            this.strResponse = this.strResponse.replace("status", "404");
-
-        } catch (Exception e) {
-
-            this.strResponse = this.strResponse.replace("status", "500");
-
+        } else {
+            this.strResponse = this.strResponse.replace("status", "406");
         }
+
 
         headerData = strResponse.getBytes();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
