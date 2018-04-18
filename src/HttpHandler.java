@@ -5,10 +5,19 @@ public class HttpHandler {
 
     private MimeTypes mimeTypes;
     private HttpRequest httpRequest;
+
+    /**
+     * Constructor of HttpHandler that defines a MimeTypes Object.
+     * @param mimeTypes
+     */
     public HttpHandler(MimeTypes mimeTypes) {
         this.mimeTypes = mimeTypes;
     }
 
+    /**
+     * This Method process a HTTP request, splits the request and create a HTTPRequest Object with the data.
+     * @param message
+     */
     public void handleHttp(String message) {
 
         HashMap<String, String> hashHeaders = new HashMap<>();
@@ -90,12 +99,13 @@ public class HttpHandler {
 
     }
 
+    /**
+     * When the response is done, this method returns a bytes array with the response
+     * @return the response of the HTTP request.
+     */
     public byte[] createResponse() {
         HttpResponse httpResponse = new HttpResponse(this.httpRequest);
         return httpResponse.getResponse();
     }
 
-    public String errorHandler() {
-        return null;
-    }
 }
