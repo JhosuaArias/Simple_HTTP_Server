@@ -15,6 +15,11 @@ public class HttpResponse {
     private byte[] response;
     private byte[] headerData;
     private byte[] bodyData;
+
+    /**
+     * Constructor
+     * @param request The request you want to generate a response to.
+     */
     public HttpResponse(HttpRequest request){
 
         this.contentTypes = new MimeTypes();
@@ -26,6 +31,9 @@ public class HttpResponse {
         return this.strResponse;
     }
 
+    /**
+     * Generates the response based on the method.
+     */
     private void GenerateResponse () {
         switch (this.request.method){
             case GET:
@@ -43,6 +51,9 @@ public class HttpResponse {
         }
     }
 
+    /**
+     * Handles unknown methods.
+     */
     private void HandleUnknown(){
         this.strResponse = "HTTP/1.1 501 \r\n"; //HTTP Version and Status
         this.strResponse += "Date: " + this.getServerTime() + "\r\n";
@@ -53,9 +64,14 @@ public class HttpResponse {
         this.response = strResponse.getBytes();
     }
 
+    /**
+     * Handles HEAD, POST, and GET methods.
+     * @param body If the method is POST or GET.
+     */
     private void HandleMethod(boolean body){
         File file = new File(this.request.filename);
 
+        //Basic response.
         this.strResponse = "HTTP/1.1 status \r\n"; //HTTP Version and Status
         this.strResponse += "Date: " + this.getServerTime() + "\r\n";
         this.strResponse += "Server: TP1/1.0 \r\n"; //Server ID
@@ -64,6 +80,7 @@ public class HttpResponse {
         this.strResponse += "Connection: close \r\n";
         this.strResponse += "\r\n";
 
+        //If the accept types match the requested type.
         if(this.request.contentTypes.contains(this.getContentType(this.request.filename)) || this.request.contentTypes.contains("*/*")){
             try{
                 FileInputStream fileInputStream = new FileInputStream(file);
@@ -87,7 +104,7 @@ public class HttpResponse {
             this.strResponse = this.strResponse.replace("status", "406");
         }
 
-
+        //Created the response
         headerData = strResponse.getBytes();
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
         try {
@@ -101,11 +118,20 @@ public class HttpResponse {
         response = outputStream.toByteArray();
     }
 
+    /**
+     * Gets the content type of a file
+     * @param fileName String with the file's name.
+     * @return String with the content type.
+     */
     private String getContentType(String fileName) {
         String [] format = fileName.split("\\.");
         return this.contentTypes.getMimeType(format[1]);
     }
 
+    /**
+     * Generates a string with the current time
+     * @return String with the current time.
+     */
     private String getServerTime() {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat dateFormat = new SimpleDateFormat(
@@ -114,6 +140,10 @@ public class HttpResponse {
         return dateFormat.format(calendar.getTime());
     }
 
+    /**
+     * Returns the response.
+     * @return The response.
+     */
     public byte[] getResponse() {
         return response;
     }

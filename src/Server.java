@@ -8,6 +8,9 @@ public class Server {
     private MimeTypes mimeTypes;
 
 
+    /**
+     * Constructor
+     */
     public Server() {
         this.mimeTypes = new MimeTypes();
     }
@@ -18,6 +21,10 @@ public class Server {
         this.acceptRequests();
     }
 
+    /**
+     * Accepts the requests to access the server.
+     * @throws Exception Accept the socket.
+     */
     public void acceptRequests() throws Exception{
         while (true) {
             Socket client = this.serverSocket.accept();
