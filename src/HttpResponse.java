@@ -44,23 +44,25 @@ public class HttpResponse {
     }
 
     private void HandleUnknown(){
-        this.response = "HTTP/1.1 501 \r\n"; //HTTP Version and Status
-        this.response += "Date: " + this.getServerTime() + "\r\n";
-        this.response += "Server: TP1/1.0 \r\n"; //Server ID
-        this.response += "Connection: close \r\n";
-        this.response += "\r\n";
+        this.strResponse = "HTTP/1.1 501 \r\n"; //HTTP Version and Status
+        this.strResponse += "Date: " + this.getServerTime() + "\r\n";
+        this.strResponse += "Server: TP1/1.0 \r\n"; //Server ID
+        this.strResponse += "Connection: close \r\n";
+        this.strResponse += "\r\n";
+
+        this.response = strResponse.getBytes();
     }
 
     private void HandleMethod(boolean body){
         File file = new File(this.request.filename);
 
-        this.response = "HTTP/1.1 status \r\n"; //HTTP Version and Status
-        this.response += "Date: " + this.getServerTime() + "\r\n";
-        this.response += "Server: TP1/1.0 \r\n"; //Server ID
-        this.response += "Content-Length: " + String.valueOf(file.length()) + " \r\n"; //Length of the content
-        this.response += "Content-Type: " + this.getContentType(this.request.filename) + " \r\n"; //Content type
-        this.response += "Connection: close \r\n";
-        this.response += "\r\n";
+        this.strResponse = "HTTP/1.1 status \r\n"; //HTTP Version and Status
+        this.strResponse += "Date: " + this.getServerTime() + "\r\n";
+        this.strResponse += "Server: TP1/1.0 \r\n"; //Server ID
+        this.strResponse += "Content-Length: " + String.valueOf(file.length()) + " \r\n"; //Length of the content
+        this.strResponse += "Content-Type: " + this.getContentType(this.request.filename) + " \r\n"; //Content type
+        this.strResponse += "Connection: close \r\n";
+        this.strResponse += "\r\n";
 
         try{
             FileInputStream fileInputStream = new FileInputStream(file);
