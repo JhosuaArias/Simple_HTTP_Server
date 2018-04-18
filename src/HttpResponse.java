@@ -1,6 +1,7 @@
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
@@ -9,9 +10,11 @@ import java.util.TimeZone;
 public class HttpResponse {
 
     private HttpRequest request;
-    private String response;
+    private String strResponse;
     private MimeTypes contentTypes;
-
+    private byte[] response;
+    private byte[] headerData;
+    private byte[] bodyData;
     public HttpResponse(HttpRequest request){
 
         this.contentTypes = new MimeTypes();
@@ -19,8 +22,8 @@ public class HttpResponse {
         this.GenerateResponse();
     }
 
-    public String getResponse(){
-        return this.response;
+    public String getStrResponse(){
+        return this.strResponse;
     }
 
     private void GenerateResponse () {
@@ -61,26 +64,34 @@ public class HttpResponse {
 
         try{
             FileInputStream fileInputStream = new FileInputStream(file);
-
             if (body) {
-                int endOfFile = fileInputStream.read();
-                while (endOfFile != -1){
-                    response += (char) endOfFile;
-                    endOfFile = fileInputStream.read();
-                }
+                Path path = Paths.get(this.request.filename);
+                bodyData = Files.readAllBytes(path);
             }
 
-            this.response = this.response.replace("status", "200 OK");
+            this.strResponse = this.strResponse.replace("status", "200 OK");
 
         } catch (FileNotFoundException e) {
 
-            this.response = this.response.replace("status", "404");
+            this.strResponse = this.strResponse.replace("status", "404");
 
         } catch (Exception e) {
 
-            this.response = this.response.replace("status", "500");
+            this.strResponse = this.strResponse.replace("status", "500");
 
         }
+
+        headerData = strResponse.getBytes();
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream( );
+        try {
+            outputStream.write(headerData);
+            if(bodyData != null) {
+                outputStream.write(bodyData);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        response = outputStream.toByteArray();
     }
 
     private String getContentType(String fileName) {
@@ -94,5 +105,9 @@ public class HttpResponse {
                 "EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
         dateFormat.setTimeZone(TimeZone.getTimeZone("GMT"));
         return dateFormat.format(calendar.getTime());
+    }
+
+    public byte[] getResponse() {
+        return response;
     }
 }

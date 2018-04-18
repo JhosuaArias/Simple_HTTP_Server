@@ -1,4 +1,3 @@
-import java.io.FileReader;
 import java.util.HashMap;
 
 public class HttpHandler {
@@ -17,7 +16,7 @@ public class HttpHandler {
         String splitFirstLine[] = splitMessage[0].split("\\s+");
         String method = splitFirstLine[0];
         String parameters[];
-        String filename;
+        String filename = "";
 
         for (int i = 1; i < splitMessage.length; i++) {
             String splitHeader[] = splitMessage[i].split(":");
@@ -38,6 +37,8 @@ public class HttpHandler {
 
             if(filename.equalsIgnoreCase("/")){
                 filename = "index.html";
+            }else {
+                filename = filename.substring(1,filename.length());
             }
 
             if (splitUrl.length == 2) {
@@ -55,10 +56,12 @@ public class HttpHandler {
             }
         } else {
 
-            filename = splitMessage[1];
             if (method.equalsIgnoreCase("POST")) {
+                filename = splitMessage[1];
                 if(filename.equalsIgnoreCase("/")){
                     filename = "index.html";
+                }else {
+                    filename = filename.substring(1,filename.length());
                 }
                 parameters = splitMessage[splitMessage.length-1].split("&");
                 for (int i = 0; i < parameters.length; i++) {
@@ -73,7 +76,7 @@ public class HttpHandler {
 
     }
 
-    public String createResponse() {
+    public byte[] createResponse() {
         HttpResponse httpResponse = new HttpResponse(this.httpRequest);
         return httpResponse.getResponse();
     }
