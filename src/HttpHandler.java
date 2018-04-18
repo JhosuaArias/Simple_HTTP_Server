@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class HttpHandler {
@@ -31,6 +32,18 @@ public class HttpHandler {
             referer = "";
         }
 
+        String acceptContentTypes = hashHeaders.get("Accept");
+        ArrayList<String> contentTypes;
+        contentTypes = new ArrayList<>();
+        if(acceptContentTypes == null){
+            acceptContentTypes= "";
+        } else {
+            String[] splitContents = acceptContentTypes.split(",");
+            for (String element: splitContents) {
+                contentTypes.add(element);
+            }
+        }
+
         if (method.equalsIgnoreCase("GET") || method.equalsIgnoreCase("HEAD")) { //Como eran lo mismo
             String splitUrl[] = splitFirstLine[1].split("\\?");
             filename = splitUrl[0];
@@ -50,9 +63,9 @@ public class HttpHandler {
                 }
             }
             if (method.equalsIgnoreCase("GET")) {
-                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.GET, hashParameters);
+                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.GET, hashParameters,contentTypes);
             } else {
-                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.HEAD, hashParameters);
+                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.HEAD, hashParameters,contentTypes);
             }
         } else {
 
@@ -68,9 +81,9 @@ public class HttpHandler {
                     String parameter[] = parameters[i].split("=");
                     hashParameters.put(parameter[0],parameter[1]);
                 }
-                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters);
+                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters,contentTypes);
             } else {
-                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters);
+                httpRequest = new HttpRequest(filename, hashHeaders.get("Host"), referer, Method.UNKWOWN, hashParameters,contentTypes);
             }
         }
 
